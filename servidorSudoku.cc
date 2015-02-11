@@ -1,5 +1,7 @@
 //  Hacer un Servidor para jugar sudoku "Fil;Col;id;val"
 //TO DO: Validar, Hashtable for id score. 
+// Linea de compilación: g++ -I/home/utp/zmq/include -L/home/utp/zmq/lib -o server servidorSudoku.cc -lzmq
+
 
 #include <zmq.h>
 #include <stdio.h>
@@ -126,6 +128,7 @@ int main (void)
         ////JUGADA
 		sscanf(buffer,"%d;%d;%s;%d", &fila,&col,&id);
 		cout << buffer << endl;
+		
 		/*
 		if(op[0] == '+')
 		{
