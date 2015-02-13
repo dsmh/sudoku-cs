@@ -46,7 +46,7 @@ int main (void)
     //char s[] = row+";"+column+";"+value+";gabriel";
 
 
-    char s[] = "1;1;1;gabriel";
+    char s[] = "0;0;9;gabriel";
     //char s[] = "11s";    
     int tam = strlen(s);
     char buffer [20];

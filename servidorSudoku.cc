@@ -91,6 +91,13 @@ void inicializarSudoku(int matrix[9][9])
 	matrix[8][6]=8;	
 }
 
+void burn_play(int matrix[9][9],int row, int column,int value)
+	{
+		matrix[row][column] = value;
+	}
+
+
+
 void mostrar_sudoku(int matrix[9][9])
 	{
 		int i;
@@ -147,6 +154,7 @@ int main (void)
 		printf("fila: %d\n",fila);
 		printf("columna:%d\n",col);
 		printf("valor: %d\n",valor);
+		burn_play(matriz,fila,col,valor);
 
 		sleep (5);          //  Do some 'work'
         zmq_send (responder, "done", 100, 0);
