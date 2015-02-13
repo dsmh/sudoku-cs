@@ -91,7 +91,23 @@ void inicializarSudoku(int matrix[9][9])
 	matrix[8][6]=8;	
 }
 
-
+void mostrar_sudoku(int matrix[9][9])
+	{
+		int i;
+		int j;
+		printf("                            ---------------------\n");
+		for (i = 0; i < 9; i++)
+		{
+			printf("                            | ");
+			for (j = 0; j < 9; j++)
+			{
+				printf("%d ",matrix[i][j]);
+			}
+			printf("|\n");
+			/* code */
+		}
+		printf("                            ---------------------\n\n");
+	}
 
 
 ///matriz[fila][col]
@@ -103,7 +119,6 @@ int main (void)
 	int matriz[9][9];
 	inicializarSudoku(matriz);
 	//cout << matriz[0][0] << endl;
-
 	
 	
     //  Socket to talk to clients
@@ -118,8 +133,10 @@ int main (void)
 	int valor;
 	int score=0;
     while (1) {
+		
         char buffer [100];
         printf(".............:::::::::::::::SUDOKU SERVER ONLINE:::::::::::::::............. \n");
+		mostrar_sudoku(matriz);
         zmq_recv (responder, buffer, 100, 0);
         //printf ("%s\n",buffer);
       
