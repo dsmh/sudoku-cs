@@ -3,10 +3,13 @@
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <iostream>
+
+using namespace std;
 
 int main (void)
 {
-    printf ("Connecting to hello world server...\n");
+    printf(".............:::::::::::::::SUDOKU CLIENT ONLINE:::::::::::::::............. \n");
     //crea un nuevo contexto permitiendo un espacio para establecer 
     //diferetnes tipos de comportamientos q se pueden modificar utilizadno.
     //la funcion context_set y obtener por medio de context_get.
@@ -18,11 +21,32 @@ int main (void)
     zmq_connect (requester, "tcp://localhost:5555");
 
     //char *s; 
-    //scanf("ingrese mensaje: %s",s); 
-    
+    //scanf("ingrese mensaje: %s",s);
+    cout << "row : "; 
+    int row;
+    cin >>row;
+
+    cout << "column : "; 
+    int column;
+    cin >>column;
+
+    cout << "value : "; 
+    int value;
+    cin >>value;
+
+    int play_data[] = {row, column, value};
+    char labels[] = {'r', 'w', 'v'};
+   
+    for (int i = 0; i < 3; ++i)
+    {
+        cout << labels[i];
+        cout << play_data[i] << endl;
+    }
+    //strcat(row,column);
+    //char s[] = row+";"+column+";"+value+";gabriel";
 
 
-    char *s = "0;0;gabriel;1";
+    char s[] = "1;1;1;gabriel";
     //char s[] = "11s";    
     int tam = strlen(s);
     char buffer [20];

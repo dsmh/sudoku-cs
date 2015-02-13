@@ -119,15 +119,23 @@ int main (void)
 	int score=0;
     while (1) {
         char buffer [100];
-        printf(".............:::::::::::::::SUSOKU ONLINE:::::::::::::::............. \n");
+        printf(".............:::::::::::::::SUDOKU SERVER ONLINE:::::::::::::::............. \n");
         zmq_recv (responder, buffer, 100, 0);
-        printf ("%s\n",buffer);
+        //printf ("%s\n",buffer);
       
         ///printf ("%s\n",op);
      
         ////JUGADA
-		sscanf(buffer,"%d;%d;%s;%d", &fila,&col,&id);
-		cout << buffer << endl;
+		sscanf(buffer,"%d;%d;%d", &fila,&col,&valor);
+		printf("fila: %d\n",fila);
+		printf("columna:%d\n",col);
+		printf("valor: %d\n",valor);
+
+		sleep (5);          //  Do some 'work'
+        zmq_send (responder, "done", 100, 0);
+		//cout << fila << endl;
+		//cout << col << endl;
+		//cout << valor << endl;
 		
 		/*
 		if(op[0] == '+')
