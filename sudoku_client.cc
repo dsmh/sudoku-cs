@@ -34,39 +34,6 @@ int main (void)
         zmq_recv (requester, buffer, 10, 0);
         printf ("Received: %s\n",buffer);
     }
-
-
-
-
-    //char *s; 
-    //scanf("ingrese mensaje: %s",s);
-    /*cout << "row : "; 
-    int row;
-    cin >>row;
-
-    cout << "column : "; 
-    int column;
-    cin >>column;
-
-    cout << "value : "; 
-    int value;
-    cin >>value; */ //SE PROBARA UN METODO ALTERNATIVO DE INGRESO.
-
-
-    /*int play_data[] = {row, column, value};
-    char labels[] = {'r', 'w', 'v'};
-   
-    for (int i = 0; i < 3; ++i)
-    {
-        cout << labels[i];
-        cout << play_data[i] << endl;
-    }*/  ///COMENTADO EN ULTIMO COMIT
-    //strcat(row,column);
-    //char s[] = row+";"+column+";"+value+";gabriel";
-
-
-    
-
     
     //cierra la conexion de un puerto  y hace q todas la operaciones devuelvan ERRONO. 
     zmq_close (requester);
