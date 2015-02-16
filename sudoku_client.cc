@@ -20,9 +20,27 @@ int main (void)
     //soliita la conexion a la direccion esta puede ser ipv6 o ipv4 si se configura el contexto para esto.
     zmq_connect (requester, "tcp://localhost:5555");
 
+    while(1)
+    {
+        char s[50];
+        cout << "Ingrese su jugada en el formato: fila;columna;valor;NickName    ";
+        cin >> s;  
+        int tam = strlen(s);
+        char buffer [100];
+    
+        //envia un mensaje a el servidor por medio de nuestro socket
+        zmq_send (requester, s, tam, 0);
+        //recibe un mensaje del servidor 
+        zmq_recv (requester, buffer, 10, 0);
+        printf ("Received: %s\n",buffer);
+    }
+
+
+
+
     //char *s; 
     //scanf("ingrese mensaje: %s",s);
-    cout << "row : "; 
+    /*cout << "row : "; 
     int row;
     cin >>row;
 
@@ -32,36 +50,23 @@ int main (void)
 
     cout << "value : "; 
     int value;
-    cin >>value;
+    cin >>value; */ //SE PROBARA UN METODO ALTERNATIVO DE INGRESO.
 
-    int play_data[] = {row, column, value};
+
+    /*int play_data[] = {row, column, value};
     char labels[] = {'r', 'w', 'v'};
    
     for (int i = 0; i < 3; ++i)
     {
         cout << labels[i];
         cout << play_data[i] << endl;
-    }
+    }*/  ///COMENTADO EN ULTIMO COMIT
     //strcat(row,column);
     //char s[] = row+";"+column+";"+value+";gabriel";
 
 
-    char s[] = "0;0;9;gabriel";
-    //char s[] = "11s";    
-    int tam = strlen(s);
-    char buffer [20];
-    //int i = 0;
     
-    /*for (i = 0; i<tam; i++)
-        {
-            printf ("Sending: %c",s[i]); 
-        }*/
-    
-    //envia un mensaje a el servidor por medio de nuestro socket
-    zmq_send (requester, s, tam, 0);
-    //recibe un mensaje del servidor 
-    zmq_recv (requester, buffer, 10, 0);
-    printf ("Received: %s\n",buffer);
+
     
     //cierra la conexion de un puerto  y hace q todas la operaciones devuelvan ERRONO. 
     zmq_close (requester);

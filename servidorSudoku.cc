@@ -1,4 +1,4 @@
-//  Hacer un Servidor para jugar sudoku "Fil;Col;id;val"
+//  Hacer un Servidor para jugar sudoku "Fil;Col;val;id"
 //TO DO: Validar, Hashtable for id score. 
 // Linea de compilación: g++ -I/home/utp/zmq/include -L/home/utp/zmq/lib -o server servidorSudoku.cc -lzmq
 
@@ -11,11 +11,13 @@
 #include <stdlib.h>
 #include <iostream>
 
+
 using namespace std;
 
 /** Check whether grid[i][j] is valid in the grid */
-bool isValid(int grid[] [9])
+bool isValid(int grid[][9])
 {
+	cout << "epa";
 	int i, j;
 	bool status;
 	status = true;
@@ -98,6 +100,7 @@ void burn_play(int matrix[9][9],int row, int column,int value)
 
 
 
+//Se debe devolver un String con la matriz impresa y enviar ese String al cliente.
 void mostrar_sudoku(int matrix[9][9])
 	{
 		int i;
@@ -139,6 +142,7 @@ int main (void)
 	int col=0;
 	int valor;
 	int score=0;
+	int temp= 0;
     while (1) {
 		
         char buffer [100];
@@ -150,52 +154,26 @@ int main (void)
         ///printf ("%s\n",op);
      
         ////JUGADA
-		sscanf(buffer,"%d;%d;%d", &fila,&col,&valor);
+		sscanf(buffer,"%d;%d;%d;%s", &fila,&col,&valor,&id);
 		printf("fila: %d\n",fila);
-		printf("columna:%d\n",col);
+		printf("columna: %d\n",col);
 		printf("valor: %d\n",valor);
+		//Se Almacena el valor que tiene la celda, antes de ser asignada. Para retroceder movimientos invalidos.
+		//temp=(long)matriz[fila,col]; ////C se complica
 		burn_play(matriz,fila,col,valor);
-
-		sleep (5);          //  Do some 'work'
+		if  (!isValid(matriz)) 
+			{
+				cout << "Invalid input" << endl;
+				burn_play(matriz,fila,col,0);
+			}
+		//cout << isValid(matriz);
+		//sleep (5);          //  Do some 'work'
+		mostrar_sudoku(matriz);
         zmq_send (responder, "done", 100, 0);
 		//cout << fila << endl;
 		//cout << col << endl;
 		//cout << valor << endl;
 		
-		/*
-		if(op[0] == '+')
-		{
-			R=num1+num2;
-			sprintf(resultado,"%d",R);
-		}
-		////OPERACION RESTA
-		if(op[0] == '-')
-		{
-			R=num1-num2;
-			sprintf(resultado,"%d",R);
-		}
-		
-		////OPERACION MULTIPLICACION
-		if(op[0] == '*')
-		{
-			R=num1*num2;
-			sprintf(resultado,"%d",R);
-		}
-		
-		////OPERACION DIVISION
-		if(op[0] == '/')
-		{
-			re=num1/(float)num2;
-			sprintf(resultado,"%f",re);
-			printf("%f\n",re);
-		}
-			
-        //printf ("Received Hello\n");
-        //sleep (5);          //  Do some 'work'
-        
-        zmq_send (responder, resultado, 100, 0);
-        * 
-        * */
     }
         
     return 0;
