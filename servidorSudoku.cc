@@ -95,7 +95,7 @@ void inicializarSudoku(int matrix[9][9])
 
 void burn_play(int matrix[9][9],int row, int column,int value)
 	{
-		matrix[row][column] = value;
+		matrix[row-1][column-1] = value;
 	}
 
 
@@ -154,6 +154,7 @@ int main (void)
         ///printf ("%s\n",op);
      
         ////JUGADA
+		//
 		sscanf(buffer,"%d;%d;%d;%s", &fila,&col,&valor,&id);
 		printf("fila: %d\n",fila);
 		printf("columna: %d\n",col);
@@ -161,11 +162,11 @@ int main (void)
 		//Se Almacena el valor que tiene la celda, antes de ser asignada. Para retroceder movimientos invalidos.
 		//temp=(long)matriz[fila,col]; ////C se complica
 		burn_play(matriz,fila,col,valor);
-		if  (!isValid(matriz)) 
+		/*if  (!isValid(matriz)) 
 			{
 				cout << "Invalid input" << endl;
 				burn_play(matriz,fila,col,0);
-			}
+			}*/
 		//cout << isValid(matriz);
 		//sleep (5);          //  Do some 'work'
 		mostrar_sudoku(matriz);
