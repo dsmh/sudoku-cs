@@ -162,11 +162,11 @@ int main (void)
 		//Se Almacena el valor que tiene la celda, antes de ser asignada. Para retroceder movimientos invalidos.
 		//temp=(long)matriz[fila,col]; ////C se complica
 		burn_play(matriz,fila,col,valor);
-		if  (!isValid(matriz)) 
+		/*if  (!isValid(matriz)) 
 			{
 				cout << "Invalid input" << endl;
 				burn_play(matriz,fila,col,0);
-			}
+			}*/
 		//cout << isValid(matriz);
 		//sleep (5);          //  Do some 'work'
 		mostrar_sudoku(matriz);
