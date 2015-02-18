@@ -7,22 +7,15 @@ using namespace std;
 
 void vectorize_hash(map<string,int>& map,vector<string>& names, vector<int>& scores)
 	{
-		/*vector<string> names;
-		vector<int> scores;*/
 
 		int i = 0;
 		for (auto o : map)
 			{
 		
-				//cout << o.first;
-				//cout << " => "<< o.second<<endl;
 				names.push_back(o.first);
 				scores.push_back(o.second);
 			}
 
-		//vector<vector> vectores(names,scores);
-
-			//return vectores;
 	}
 
 
@@ -94,16 +87,15 @@ int main()
 		addplayer_points("gabriel",1,players);
 		addplayer_points("B",1,players);
 
+///PRINT SCORE BOARD
 		
 		vectorize_hash(players,vect2,vect1);
 		
 
 
-///PRINT SCORE BOARD
 		print_scoreboard(vect1,vect2);
 		
-		int mayor;
-		int index;		
+				
 		
 		find_winner(mayor,index,vect1,vect2);
 	}

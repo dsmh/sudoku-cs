@@ -249,9 +249,20 @@ int main (void)
 	int score=0;
 	int temp= 0;
 
+		//////////////////////////CREACION DE SCOREBOARD A PARTIR DE JUGADA
+		map<string,int> players;
+
+		int mayor;
+		int winner_index;
+
 	
     while (1) {
-		temp = matriz[fila,col];////??????????????????????????
+		//reinicia vectores para calculo de nuevo sudoku master para. 
+		vector<int> vect1;
+		vector<string> vect2;
+		
+
+		//temp = matriz[fila,col];////??????????????????????????
         char buffer [100];
         printf(".............:::::::::::::::SUDOKU SERVER ONLINE:::::::::::::::............. \n");
 		mostrar_sudoku(matriz);
@@ -262,24 +273,20 @@ int main (void)
      
         ////JUGADA
 		//
-		sscanf(buffer,"%d;%d;%d;%s", &fila,&col,&valor,&id);
+		sscanf(buffer,"%d;%d;%d", &fila,&col,&valor);
 		printf("fila: %d\n",fila);
 		printf("columna: %d\n",col);
 		printf("valor: %d\n",valor);
 		printf("Jugador: %s\n",id );
 		//Se Almacena el valor que tiene la celda, antes de ser asignada. Para retroceder movimientos invalidos.
-		temp = matriz[fila,col];/////NO LLEGA EL VALOR QUE SE PRETENDE. Gracias jodido y complicado C :@
+		//temp = matriz[fila,col];/////NO LLEGA EL VALOR QUE SE PRETENDE. Gracias jodido y complicado C :@
 		valor=(int)valor;
 		//burn_play(matriz,fila,col,valor);
 		
-		//////////////////////////CREACION DE SCOREBOARD A PARTIR DE JUGADA
-		map<string,int> players;
-		vector<int> vect1;
-		vector<string> vect2;
 
-		int mayor;
-		int winner_index;
 
+
+		mostrar_sudoku(matriz);
 
 		//////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////
@@ -292,9 +299,21 @@ int main (void)
 			/////si la entrada es invalidase agregara el id => -1 si no existe a el mapa.
 			/////si existe se le restara 1 al puntaje.
 			addplayer_points("gabriel",-1,players);			
+			vectorize_hash(players,vect2,vect1);
 			print_scoreboard(vect1,vect2);
 			find_winner(mayor,winner_index,vect1,vect2);
 
+		}else
+		{
+			
+			//si la jugada es exitosa y el id no existe se agrega id => 1 al mapa.
+			//si ya existe se le sumara 1.  
+			addplayer_points("gabriel",1,players);
+
+			vectorize_hash(players,vect2,vect1);
+			print_scoreboard(vect1,vect2);
+			find_winner(mayor,winner_index,vect1,vect2);
+			
 		}
 		//////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////
@@ -317,18 +336,10 @@ int main (void)
 
 
 
-		mostrar_sudoku(matriz);
         
         zmq_send (responder, "Jugada Exitosa. Felicitaciones!!! \n", 100, 0);
 
 
-		//si la jugada es exitosa y el id no existe se agrega id => 1 al mapa.
-		//si ya existe se le sumara 1.  
-		addplayer_points("gabriel",1,players);
-
-		vectorize_hash(players,vect2,vect1);
-		print_scoreboard(vect1,vect2);
-		find_winner(mayor,winner_index,vect1,vect2);
 
     }
         
