@@ -45,36 +45,15 @@ void  addplayer_points(string nickname,int amount,map<string,int>& map)
 			map[nickname] += amount;	
 	}
 
-void initialize_scoreboard()
-	{
-		map<string,int> players;
-		//vector<vectors> vectores;
-		
-		//vector<int> vect1 = {4,7,5,8,3,6,2};
-		//vector<string> vect2 = {"gabriel","steven","darwin","carlos","andres","pepito","benito"};
-		vector<int> vect1;
-		vector<string> vect2;
-		
-		vectorize_hash(players,vect2,vect1);
-		
-		/*for(auto j: vectores)
-			{
-				for (auto k: j)
-				{	
-					cout<<k<<endl	
-				}
-			}
-		*/
+
+void find_winner(int& mayor,int& index,vector<int>& vect1,vector<string>& vect2){
 
 
-///PRINT SCORE BOARD
-		print_scoreboard(vect1,vect2);
-		
-		
-		int i;
-		int mayor = vect1[0];
-		int index = 0;
-		int tam = vect1.size();
+			mayor = vect1[0];
+			index = 0;
+			int tam = vect1.size();
+
+			int i;
 		for (i = 1 ; i < tam ; i++)
 			{
 				if(mayor > vect1[i])
@@ -100,13 +79,31 @@ void initialize_scoreboard()
 		//cout << mayor << endl;
 	}
 
+
 int main()
 	{
-		initialize_scoreboard();
+		map<string,int> players;
+		vector<int> vect1;
+		vector<string> vect2;
+		
+		//vector<vectors> vectores;
+		
 		addplayer_points("stiven",1,players);
 		addplayer_points("gabriel",1,players);
 		addplayer_points("gabriel",1,players);
 		addplayer_points("gabriel",1,players);
 		addplayer_points("B",1,players);
 
+		
+		vectorize_hash(players,vect2,vect1);
+		
+
+
+///PRINT SCORE BOARD
+		print_scoreboard(vect1,vect2);
+		
+		int mayor;
+		int index;		
+		
+		find_winner(mayor,index,vect1,vect2);
 	}

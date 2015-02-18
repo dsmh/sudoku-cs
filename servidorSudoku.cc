@@ -13,8 +13,83 @@
 #include <cstdint>
 
 
+#include <string>
+#include <map>
+#include <vector>
+
+
 using namespace std;
 
+///////////////////SCORE BOARD FUNCTIONS////////////////////////////////////////
+void vectorize_hash(map<string,int>& map,vector<string>& names, vector<int>& scores)
+	{
+
+		int i = 0;
+		for (auto o : map)
+			{
+		
+				names.push_back(o.first);
+				scores.push_back(o.second);
+			}
+
+	}
+
+
+void print_scoreboard(vector<int> v1, vector<string> v2)
+	{
+		int i;
+
+		int tam = v1.size();
+		cout << "--------------------" <<endl;
+		for (i = 0 ; i < tam ; i++)
+			{
+				cout << v2[i] << " => " << v1[i]<<endl; 
+			}
+		cout << "--------------------" <<endl;
+	}
+
+
+void  addplayer_points(string nickname,int amount,map<string,int>& map)
+	{
+			map[nickname] += amount;	
+	}
+
+
+void find_winner(int& mayor,int& index,vector<int>& vect1,vector<string>& vect2){
+
+
+			mayor = vect1[0];
+			index = 0;
+			int tam = vect1.size();
+
+			int i;
+		for (i = 1 ; i < tam ; i++)
+			{
+				if(mayor > vect1[i])
+					{
+						mayor = mayor;
+						//cout << "if" << endl;
+						//cout << mayor << endl;
+					}
+				else
+					{
+						mayor = vect1[i];
+						index = i;
+						//cout << "else" << endl;
+						//cout << mayor  << endl;
+					}
+			}
+		//cout << "mayor:" << endl;
+		
+		//cout << "winner index:" << endl;
+		//cout << index << endl;
+		cout << "CURRENT SUDOKU MASTER" << endl;
+		cout << vect2[index] <<": " << mayor << endl;		
+		//cout << mayor << endl;
+	}
+
+
+///////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -195,7 +270,17 @@ int main (void)
 		//Se Almacena el valor que tiene la celda, antes de ser asignada. Para retroceder movimientos invalidos.
 		temp = matriz[fila,col];/////NO LLEGA EL VALOR QUE SE PRETENDE. Gracias jodido y complicado C :@
 		valor=(int)valor;
-		burn_play(matriz,fila,col,valor);
+		//burn_play(matriz,fila,col,valor);
+		
+		//////////////////////////CREACION DE SCOREBOARD A PARTIR DE JUGADA
+		map<string,int> players;
+		vector<int> vect1;
+		vector<string> vect2;
+
+		int mayor;
+		int winner_index;
+
+
 		//////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////
@@ -204,6 +289,12 @@ int main (void)
 		{
 			burn_play(matriz,fila,col,0); //CAPTURA DEL NUMERO DESDE LA MATRIZ EN VEZ DE 0
 			zmq_send (responder, "Entrada invalida \n", 100, 0);
+			/////si la entrada es invalidase agregara el id => -1 si no existe a el mapa.
+			/////si existe se le restara 1 al puntaje.
+			addplayer_points("gabriel",-1,players);			
+			print_scoreboard(vect1,vect2);
+			find_winner(mayor,winner_index,vect1,vect2);
+
 		}
 		//////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////
@@ -223,12 +314,22 @@ int main (void)
 			}*/
 		//cout << isValid(matriz);
 		//sleep (5);          //  Do some 'work'
+
+
+
 		mostrar_sudoku(matriz);
+        
         zmq_send (responder, "Jugada Exitosa. Felicitaciones!!! \n", 100, 0);
-		//cout << fila << endl;
-		//cout << col << endl;
-		//cout << valor << endl;
-		
+
+
+		//si la jugada es exitosa y el id no existe se agrega id => 1 al mapa.
+		//si ya existe se le sumara 1.  
+		addplayer_points("gabriel",1,players);
+
+		vectorize_hash(players,vect2,vect1);
+		print_scoreboard(vect1,vect2);
+		find_winner(mayor,winner_index,vect1,vect2);
+
     }
         
     return 0;
