@@ -27,15 +27,15 @@ int main (void)
         
         cout << "Ingrese su jugada en el formato: fila;columna;valor;NickName    ";
         cin >> sendM;  
-        char buffer [100];
-        sendM += '\0';
+        char buffer [200];
+        //sendM += '\0';
         tam=sendM.size();
 
         //envia un mensaje a el servidor por medio de nuestro socket
         zmq_send (requester, (char *)sendM.c_str(), tam, 0);
         //recibe un mensaje del servidor 
-        zmq_recv (requester, buffer, 100, 0);
-        printf ("Received: %s\n",buffer);
+        zmq_recv (requester, buffer, 200, 0);
+        printf ("%s\n",buffer);
     }
     
     //cierra la conexion de un puerto  y hace q todas la operaciones devuelvan ERRONO. 

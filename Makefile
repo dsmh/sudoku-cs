@@ -1,5 +1,5 @@
 CC=g++
-ZMQ=/home/dsm/zmq
+ZMQ=/home/utp/zmq
 ZMQ_LIB=$(ZMQ)/lib
 ZMQ_HDR=$(ZMQ)/include
 

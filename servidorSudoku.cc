@@ -216,20 +216,21 @@ string to_string(int matrix[9][9])
 		string palabra; 
 		int h;
 		int f;
-		string cadena="                            ---------------------\n";
+		//string cadena="
+		stream << "                            ---------------------" << endl;
 		for (h = 0; h < 9; h++)
 		{
-			cadena+="                            | ";
+			stream << "                            | ";
 			for (f = 0; f < 9; f++)
 			{
-				stream << (int)matrix[h][f];//// PERO QUE DIABLOS.... C++ ES UNA MIERDA.
-				cadena+=stream.str();
+				stream << matrix[h][f]<<" ";
+				//cadena+=stream.str();
 			}
-			cadena+="|\n";
+			stream << "|"<<endl;
 			/* code */
 		}
-		cadena+="                            ---------------------\n\n";
-		return cadena;
+		stream << "                            ---------------------"<<endl<<endl;
+		return stream.str();
 }
 
 void burn_play(int matrix[9][9],int row, int column,int value)
@@ -251,27 +252,28 @@ int main (void)
 	int matriz[9][9];
 	inicializarSudoku(matriz);
 	//cout << matriz[0][0] << endl;
-	
-	
+	cout << to_string(matriz);
     //  Socket to talk to clients
+    //192.168.9.227
     void *context = zmq_ctx_new ();
     void *responder = zmq_socket (context, ZMQ_REP); //LA CONSTANTE ES PARA RESPONDER SOLICITUDES
     int rc = zmq_bind (responder, "tcp://*:5555"); //*-> INTERFAZ DE RED POR DEFECTO
     assert (rc == 0);
     
-	char id[50] = "";
+	int id;
 	int fila=0;
 	int col=0;
 	int valor=0;
 	int score=0;
 	int temp= 0;
+	stringstream stream1;
 
 		//////////////////////////CREACION DE SCOREBOARD A PARTIR DE JUGADA
 		map<string,int> players;
 
 		int mayor;
 		int winner_index;
-
+	
 	
     while (1) {
 		//reinicia vectores para calculo de nuevo sudoku master para. 
@@ -283,7 +285,7 @@ int main (void)
         char buffer [100];
         printf(".............:::::::::::::::SUDOKU SERVER ONLINE:::::::::::::::............. \n");
 		mostrar_sudoku(matriz);
-		cout << to_string(matriz);
+		//cout << to_string(matriz);
         zmq_recv (responder, buffer, 100, 0);
         //printf ("%s\n",buffer);
       
@@ -291,21 +293,17 @@ int main (void)
      
         ////JUGADA
 		//
-		sscanf(buffer,"%d;%d;%d", &fila,&col,&valor);
+		sscanf(buffer,"%d;%d;%d;%d", &fila,&col,&valor,&id);
 		printf("fila: %d\n",fila);
 		printf("columna: %d\n",col);
 		printf("valor: %d\n",valor);
-		printf("Jugador: %s\n",id );
+		printf("Jugador: %d\n",id );
 		//Se Almacena el valor que tiene la celda, antes de ser asignada. Para retroceder movimientos invalidos.
 		//temp = matriz[fila,col];/////NO LLEGA EL VALOR QUE SE PRETENDE. Gracias jodido y complicado C :@
 		valor=(int)valor;
-		//burn_play(matriz,fila,col,valor);
-		
-
-
+		burn_play(matriz,fila,col,valor);
 
 		mostrar_sudoku(matriz);
-
 
 		//////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////
@@ -314,20 +312,22 @@ int main (void)
 		if(!isValid(fila,col,matriz))
 		{
 			burn_play(matriz,fila,col,0); //CAPTURA DEL NUMERO DESDE LA MATRIZ EN VEZ DE 0
-			zmq_send (responder, "Entrada invalida \n", 100, 0);
+			//stream1 << to_string(matriz); 
+			zmq_send (responder, "entrada invalida", 100, 0);
 			/////si la entrada es invalidase agregara el id => -1 si no existe a el mapa.
 			/////si existe se le restara 1 al puntaje.
-			addplayer_points("gabriel",-1,players);			
+			stream1 << id;
+			addplayer_points(stream1.str(),-1,players);			
 			vectorize_hash(players,vect2,vect1);
 			print_scoreboard(vect1,vect2);
 			find_winner(mayor,winner_index,vect1,vect2);
 
 		}else
-		{
-			
+		{	
 			//si la jugada es exitosa y el id no existe se agrega id => 1 al mapa.
-			//si ya existe se le sumara 1.  
-			addplayer_points("gabriel",1,players);
+			//si ya existe se le sumara 1.
+			stream1 << id; 
+			addplayer_points(stream1.str(),1,players);
 
 			vectorize_hash(players,vect2,vect1);
 			print_scoreboard(vect1,vect2);
@@ -356,11 +356,13 @@ int main (void)
 
 
         
-        zmq_send (responder, "Jugada Exitosa. Felicitaciones!!! \n", 100, 0);
+        stream1 << to_string(matriz); 
+        zmq_send (responder, "Jugada Exitosa. ", 200, 0);
+        
 
 
 
     }
-        
+       
     return 0;
 }
