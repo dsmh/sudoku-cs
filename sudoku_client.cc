@@ -1,6 +1,6 @@
 
 #include <zmq.h>
-#include <string.h>
+#include <string>
 #include <stdio.h>
 #include <unistd.h>
 #include <iostream>
@@ -19,19 +19,23 @@ int main (void)
     void *requester = zmq_socket (context, ZMQ_REQ);
     //soliita la conexion a la direccion esta puede ser ipv6 o ipv4 si se configura el contexto para esto.
     zmq_connect (requester, "tcp://localhost:5555");
+    string sendM;
+    int tam;
 
     while(1)
     {
-        char s[50];
+        
         cout << "Ingrese su jugada en el formato: fila;columna;valor;NickName    ";
-        cin >> s;  
-        int tam = strlen(s);
+        cin >> sendM;  
         char buffer [100];
-    
+        sendM += '\0';
+        cout << "DEBUG: "<< sendM;
+        tam=sendM.size();
+
         //envia un mensaje a el servidor por medio de nuestro socket
-        zmq_send (requester, s, tam, 0);
+        zmq_send (requester, (char *)sendM.c_str(), tam, 0);
         //recibe un mensaje del servidor 
-        zmq_recv (requester, buffer, 10, 0);
+        zmq_recv (requester, buffer, 100, 0);
         printf ("Received: %s\n",buffer);
     }
     

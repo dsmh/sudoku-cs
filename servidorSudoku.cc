@@ -10,41 +10,68 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <iostream>
+#include <cstdint>
 
 
 using namespace std;
 
+
+
+
 /** Check whether grid[i][j] is valid in the grid */
-bool isValid(int grid[][9])
+bool isValid(int i, int j, int grid[][9])
 {
-	cout << "epa";
-	int i, j;
-	bool status;
-	status = true;
-	
-	for (int column = 0; column < 9; column++)
-		if (column != j && grid[i] [column] == grid[i] [j])
-			status = false;
-	for (int row = 0; row < 9; row++)
-		if (row != i && grid[row] [j] == grid[i] [j])
-			status = false;
-	
-	for (int row = (i / 3) * 3; row < (i / 3) * 3 + 3; row++)
-		for (int col = (j / 3) * 3; col < (j / 3) * 3 + 3; col++)
-			if (row != i && col != j && grid[row] [col] == grid[i] [j])
-				status = false;
-	
-	for (int i = 0; i < 9; i++)
-		for (int j = 0; j < 9; j++)
-			if (grid[i][j] != 0)
-				status = false;
-	
-	for (int i = 0; i < 9; i++)
-		for (int j = 0; j < 9; j++)
-			if ((grid[i][j] < 0) || (grid[i][j] > 9))
-				status = false;
-	return status;
+  // Check whether grid[i][j] is valid at the i's row
+  for (int column = 0; column < 9; column++)
+    if (column != j && grid[i][column] == grid[i][j])
+      return false;
+
+  // Check whether grid[i][j] is valid at the j's column
+  for (int row = 0; row < 9; row++)
+    if (row != i && grid[row][j] == grid[i][j])
+      return false;
+
+  // Check whether grid[i][j] is valid in the 3 by 3 box
+  for (int row = (i / 3) * 3; row < (i / 3) * 3 + 3; row++)
+    for (int col = (j / 3) * 3; col < (j / 3) * 3 + 3; col++)
+      if (row != i && col != j && grid[row][col] == grid[i][j])
+        return false;
+
+  return true; // The current value at grid[i][j] is valid
 }
+
+
+
+
+
+bool verify_block(int board[9][9], unsigned blockID)
+{
+    unsigned digits[9] = { 0 } ;
+
+    const unsigned rowBegin = (blockID / 3) * 3 ;
+    const unsigned colBegin = (blockID % 3) * 3 ;
+
+    for ( unsigned i=0; i<3; ++i )
+        for ( unsigned j=0; j<3; ++j )
+            if ( digits[board[rowBegin+i][colBegin+j]-1]++ )
+                return false ;
+
+    return true ;
+}
+
+bool subsq_verify(int board[9][9]) 
+{
+    bool verified = true ;
+    for ( unsigned i=0; i<9; ++i )
+        if ( !verify_block(board, i) )
+        {
+            std::cout << "Sub-region " << i+1 << " no es correcta.\n" ;
+            verified = false ;
+        }
+
+    return verified ;
+}
+
 
 
 
@@ -93,13 +120,6 @@ void inicializarSudoku(int matrix[9][9])
 	matrix[8][6]=8;	
 }
 
-void burn_play(int matrix[9][9],int row, int column,int value)
-	{
-		matrix[row-1][column-1] = value;
-	}
-
-
-
 //Se debe devolver un String con la matriz impresa y enviar ese String al cliente.
 void mostrar_sudoku(int matrix[9][9])
 	{
@@ -118,6 +138,16 @@ void mostrar_sudoku(int matrix[9][9])
 		}
 		printf("                            ---------------------\n\n");
 	}
+
+
+void burn_play(int matrix[9][9],int row, int column,int value)
+	{
+		matrix[row][column] = value;
+	}
+
+
+
+
 
 
 ///matriz[fila][col]
@@ -140,11 +170,13 @@ int main (void)
 	char id[50] = "";
 	int fila=0;
 	int col=0;
-	int valor;
+	int valor=0;
 	int score=0;
 	int temp= 0;
+
+	
     while (1) {
-		
+		temp = matriz[fila,col];////??????????????????????????
         char buffer [100];
         printf(".............:::::::::::::::SUDOKU SERVER ONLINE:::::::::::::::............. \n");
 		mostrar_sudoku(matriz);
@@ -159,9 +191,31 @@ int main (void)
 		printf("fila: %d\n",fila);
 		printf("columna: %d\n",col);
 		printf("valor: %d\n",valor);
+		printf("Jugador: %s\n",id );
 		//Se Almacena el valor que tiene la celda, antes de ser asignada. Para retroceder movimientos invalidos.
-		//temp=(long)matriz[fila,col]; ////C se complica
+		temp = matriz[fila,col];/////NO LLEGA EL VALOR QUE SE PRETENDE. Gracias jodido y complicado C :@
+		valor=(int)valor;
 		burn_play(matriz,fila,col,valor);
+		//////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////
+		if(!isValid(fila,col,matriz))
+		{
+			burn_play(matriz,fila,col,0); //CAPTURA DEL NUMERO DESDE LA MATRIZ EN VEZ DE 0
+			zmq_send (responder, "Entrada invalida \n", 100, 0);
+		}
+		//////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////
+		/*if(!subsq_verify(matriz))
+		{
+			zmq_send (responder, "Entrada invalida", 100, 0);
+			//burn_play(matriz,fila,col,temp);
+		}
+
+
 		/*if  (!isValid(matriz)) 
 			{
 				cout << "Invalid input" << endl;
@@ -170,7 +224,7 @@ int main (void)
 		//cout << isValid(matriz);
 		//sleep (5);          //  Do some 'work'
 		mostrar_sudoku(matriz);
-        zmq_send (responder, "done", 100, 0);
+        zmq_send (responder, "Jugada Exitosa. Felicitaciones!!! \n", 100, 0);
 		//cout << fila << endl;
 		//cout << col << endl;
 		//cout << valor << endl;
