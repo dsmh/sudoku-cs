@@ -257,7 +257,7 @@ int main (void)
     //192.168.9.227
     void *context = zmq_ctx_new ();
     void *responder = zmq_socket (context, ZMQ_REP); //LA CONSTANTE ES PARA RESPONDER SOLICITUDES
-    int rc = zmq_bind (responder, "tcp://*:5555"); //*-> INTERFAZ DE RED POR DEFECTO
+    int rc = zmq_bind (responder, "tcp://192.168.9.227:5555"); //*-> INTERFAZ DE RED POR DEFECTO
     assert (rc == 0);
     
 	int id;

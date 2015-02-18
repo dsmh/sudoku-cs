@@ -18,7 +18,7 @@ int main (void)
     //inicializa un nuevo socket otorgando un roll y usando el contexto debido a este tiene la informacion de los puertos y la configuracion 
     void *requester = zmq_socket (context, ZMQ_REQ);
     //soliita la conexion a la direccion esta puede ser ipv6 o ipv4 si se configura el contexto para esto.
-    zmq_connect (requester, "tcp://localhost:5555");
+    zmq_connect (requester, "tcp://192.168.9.227:5555");
     string sendM;
     int tam;
 
