@@ -29,7 +29,6 @@ int main (void)
         cin >> sendM;  
         char buffer [100];
         sendM += '\0';
-        cout << "DEBUG: "<< sendM;
         tam=sendM.size();
 
         //envia un mensaje a el servidor por medio de nuestro socket

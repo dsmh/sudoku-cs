@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <iostream>
 #include <cstdint>
+#include <sstream> 
+
 
 
 #include <string>
@@ -56,12 +58,9 @@ void  addplayer_points(string nickname,int amount,map<string,int>& map)
 
 
 void find_winner(int& mayor,int& index,vector<int>& vect1,vector<string>& vect2){
-
-
 			mayor = vect1[0];
 			index = 0;
 			int tam = vect1.size();
-
 			int i;
 		for (i = 1 ; i < tam ; i++)
 			{
@@ -80,7 +79,6 @@ void find_winner(int& mayor,int& index,vector<int>& vect1,vector<string>& vect2)
 					}
 			}
 		//cout << "mayor:" << endl;
-		
 		//cout << "winner index:" << endl;
 		//cout << index << endl;
 		cout << "CURRENT SUDOKU MASTER" << endl;
@@ -114,10 +112,6 @@ bool isValid(int i, int j, int grid[][9])
 
   return true; // The current value at grid[i][j] is valid
 }
-
-
-
-
 
 bool verify_block(int board[9][9], unsigned blockID)
 {
@@ -214,6 +208,29 @@ void mostrar_sudoku(int matrix[9][9])
 		printf("                            ---------------------\n\n");
 	}
 
+string to_string(int matrix[9][9])
+{
+		stringstream stream; 
+
+		int numero = 0; 
+		string palabra; 
+		int h;
+		int f;
+		string cadena="                            ---------------------\n";
+		for (h = 0; h < 9; h++)
+		{
+			cadena+="                            | ";
+			for (f = 0; f < 9; f++)
+			{
+				stream << (int)matrix[h][f];//// PERO QUE DIABLOS.... C++ ES UNA MIERDA.
+				cadena+=stream.str();
+			}
+			cadena+="|\n";
+			/* code */
+		}
+		cadena+="                            ---------------------\n\n";
+		return cadena;
+}
 
 void burn_play(int matrix[9][9],int row, int column,int value)
 	{
@@ -266,6 +283,7 @@ int main (void)
         char buffer [100];
         printf(".............:::::::::::::::SUDOKU SERVER ONLINE:::::::::::::::............. \n");
 		mostrar_sudoku(matriz);
+		cout << to_string(matriz);
         zmq_recv (responder, buffer, 100, 0);
         //printf ("%s\n",buffer);
       
@@ -287,6 +305,7 @@ int main (void)
 
 
 		mostrar_sudoku(matriz);
+
 
 		//////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////
